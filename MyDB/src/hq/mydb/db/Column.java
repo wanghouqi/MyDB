@@ -19,11 +19,19 @@ public class Column {
 
 	private String name;// 栏位名称
 	private String type;// 栏位类型
+	private String desc;// 数据库中栏位的描述
 
 	public Column(String name, String type) {
 		super();
 		this.name = name;
 		this.type = type;
+	}
+
+	public Column(String name, String type, String desc) {
+		super();
+		this.name = name;
+		this.type = type;
+		this.desc = desc;
 	}
 
 	public String getName() {
@@ -40,6 +48,14 @@ public class Column {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 	/**

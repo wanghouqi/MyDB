@@ -13,6 +13,7 @@ public class Table {
 	private boolean distinct = false;// 用于查询时,是否使用distinct
 	private ArrayList<Column> alColumn = new ArrayList<Column>();// 表中的栏位
 	private HashMap<String, Column> hmNameToColumn = new HashMap<String, Column>();
+	private String desc;// 数据库中表的描述
 
 	public Table(String name) {
 		super();
@@ -39,6 +40,23 @@ public class Table {
 		return alColumn;
 	}
 
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	/**
+	 * 添加一个Column
+	 * @param columnName
+	 */
+	public void addColumn(Column column) {
+		this.alColumn.add(column);
+		this.hmNameToColumn.put(column.getName(), column);
+	}
+
 	/**
 	 * 添加一个Column
 	 * @param columnName
@@ -52,9 +70,9 @@ public class Table {
 	 * 添加一个Column
 	 * @param columnName
 	 */
-	public void addColumn(Column column) {
-		this.alColumn.add(column);
-		this.hmNameToColumn.put(column.getName(), column);
+	public void addColumn(String columnName, String columnType,String columnDesc) {
+		Column column = new Column(columnName, columnType,columnDesc);
+		this.addColumn(column);
 	}
 
 	/**

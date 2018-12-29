@@ -23,8 +23,6 @@ public class TestBaseDAO {
 	@Rollback(false) //标明使用完此方法后事务不回滚,true时为回滚
 	public void testInitDataBaseCache() {
 		baseDAO.initDataBaseCache();
-		TableVO tvo = this.baseDAO.queryForTableVOByDBName("tl_boolean");
-		System.out.println(tvo.toString());
 		//		assertTrue(list.size() > 0);
 	}
 

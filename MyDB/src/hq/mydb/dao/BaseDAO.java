@@ -98,7 +98,6 @@ public class BaseDAO {
 			case MyDBDefinition.DATABASE_TYPE_MARIADB:
 				initDataBaseCache_mariaDB();
 				break;
-
 			default:
 				if (BaseDAO.hmNameToTable.size() == 0) {
 					throw new DAOException("System initialization fail! NameToTable is empty.");
@@ -120,7 +119,26 @@ public class BaseDAO {
 	}
 
 	private void initDataBaseCache_mariaDB() {
-
+		// 获取数据库中的所有表名
+		TableVO tvoTable = this.queryForTableVOOnSQL("SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" + this.getDataBaseName() + "'");
+		for (RowVO rvoTable : tvoTable.toRowVOArray()) {
+			String tableName = rvoTable.getCellVOValue("TABLE_NAME");
+			String tableDesc = rvoTable.getCellVOValue("TABLE_COMMENT");
+			// 生成Table
+			Table table = new Table(tableName);
+			table.setDesc(tableDesc);
+			this.hmNameToTable.put(tableName, table);
+			// 获取数据库中的表的所有栏位名
+			TableVO tvoColumn = this.queryForTableVOOnSQL("SELECT COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT FROM information_schema.COLUMNS WHERE table_name = '" + tableName
+					+ "' AND table_schema = '" + this.getDataBaseName() + "'");
+			for (RowVO rvoColumn : tvoColumn.toRowVOArray()) {
+				String columnName = rvoColumn.getCellVOValue("COLUMN_NAME");
+				String columnType = rvoColumn.getCellVOValue("DATA_TYPE");
+				String columnDesc = rvoColumn.getCellVOValue("COLUMN_COMMENT");
+				// 添加Column
+				table.addColumn(columnName, columnType, columnDesc);
+			}
+		}
 	}
 
 	/**
@@ -142,9 +160,23 @@ public class BaseDAO {
 		try {
 			DatabaseMetaData databaseMetaData = this.jdbcTemplate.getDataSource().getConnection().getMetaData();
 			String url = databaseMetaData.getURL();
-			if (url.contains("databaseName=")) {
-				String tmp = url.split("databaseName=")[1];
-				dataBaseName = tmp.substring(0, tmp.indexOf(";"));
+			switch (this.databaseType) {
+			case MyDBDefinition.DATABASE_TYPE_MYSQL:
+
+				break;
+			case MyDBDefinition.DATABASE_TYPE_SQLSERVER:
+				if (url.contains("databaseName=")) {
+					String tmp = url.split("databaseName=")[1];
+					dataBaseName = tmp.substring(0, tmp.indexOf(";"));
+				}
+				break;
+			case MyDBDefinition.DATABASE_TYPE_ORACLE:
+
+				break;
+			case MyDBDefinition.DATABASE_TYPE_MARIADB:
+				String[] strTmp = url.split("/");
+				dataBaseName = strTmp[strTmp.length - 1];
+				break;
 			}
 		} catch (Exception e) {
 			throw new DAOException("getDataBaseName()", e);
@@ -161,14 +193,26 @@ public class BaseDAO {
 		try {
 			DatabaseMetaData databaseMetaData = this.jdbcTemplate.getDataSource().getConnection().getMetaData();
 			String url = databaseMetaData.getURL();
-			String[] strTmp = url.split(":");
-			for (int i = 0; i < strTmp.length; i++) {
-				if (strTmp[i].replace(".", "@@").split("@@").length == 4) {
-					dataBaseIP = strTmp[i];
-					break;
-				}
-			}
+			switch (this.databaseType) {
+			case MyDBDefinition.DATABASE_TYPE_MYSQL:
 
+				break;
+			case MyDBDefinition.DATABASE_TYPE_SQLSERVER:
+				String[] strTmp = url.split(":");
+				for (int i = 0; i < strTmp.length; i++) {
+					if (strTmp[i].replace(".", "@@").split("@@").length == 4) {
+						dataBaseIP = strTmp[i];
+						break;
+					}
+				}
+				break;
+			case MyDBDefinition.DATABASE_TYPE_ORACLE:
+
+				break;
+			case MyDBDefinition.DATABASE_TYPE_MARIADB:
+
+				break;
+			}
 		} catch (Exception e) {
 			throw new DAOException("getDataBaseIP()", e);
 		}

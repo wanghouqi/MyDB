@@ -83,6 +83,7 @@ public class BaseDAO {
 	 * 系统启动初始化,将当前连接的数据库的信息加载到内存,生成hmNameToTable
 	 */
 	public void initDataBaseCache() {
+		System.out.println("拟美，终于可以junit测试了");
 		if (BaseDAO.hmNameToTable.size() == 0) {
 			switch (this.databaseType) {
 			case MyDBDefinition.DATABASE_TYPE_MYSQL:

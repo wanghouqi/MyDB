@@ -17,6 +17,7 @@ import hq.mydb.utils.MyDBHelper;
 public class TableVO extends DataObject {
 	private static final long serialVersionUID = 6492071082836861362L;
 	private String operation = DataObject.OPERATION_UNDEFINED; // 当前TableVO用于生成SQL时对应的数据库操作类型.
+	private RowVO rvoHead = null;// head RowVO用于传递给页面时使用.
 
 	/**
 	 * 生成一个TableVO实例
@@ -50,6 +51,30 @@ public class TableVO extends DataObject {
 
 	public void setOperation(String operation) {
 		this.operation = operation;
+	}
+
+	/**
+	 * 得到当前Table的HeadRowVO,如果用户没有主动设定,并且是第一次读取时,使用第一条记录的key生成一个新的RowVO
+	 * @return
+	 */
+	public RowVO getHeadRowVO() {
+		if (rvoHead == null) {
+			rvoHead = new RowVO();
+			if (this.size() > 0) {
+				for (CellVO cellVO : this.get(0).toCellVOArray()) {
+					rvoHead.addCellVO(new CellVO(cellVO.getKey(), cellVO.getKey()));
+				}
+			}
+		}
+		return rvoHead;
+	}
+
+	/**
+	 * 设定HeadRowVO
+	 * @param rvoHead
+	 */
+	public void setHeadRowVO(RowVO rvoHead) {
+		this.rvoHead = rvoHead;
 	}
 
 	/**

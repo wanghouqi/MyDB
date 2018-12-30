@@ -88,8 +88,9 @@ public class RowVO extends DataObject {
 	 * 
 	 * @param cellVO
 	 */
-	public void addCellVO(CellVO cellVO) {
+	public RowVO addCellVO(CellVO cellVO) {
 		super.addChildVO(cellVO);
+		return this;
 	}
 
 	/**

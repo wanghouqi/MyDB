@@ -21,6 +21,15 @@ public class Column {
 	private String type;// 栏位类型
 	private String desc;// 数据库中栏位的描述
 
+	public Column() {
+		super();
+	}
+
+	public Column(String name) {
+		super();
+		this.name = name;
+	}
+
 	public Column(String name, String type) {
 		super();
 		this.name = name;

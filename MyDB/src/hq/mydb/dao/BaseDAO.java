@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -79,11 +80,15 @@ public class BaseDAO {
 		this.showSQL = showSQL;
 	}
 
+	public Table getTable(String tableName) {
+		initDataBaseCache();
+		return hmNameToTable.get(tableName);
+	}
+
 	/**
 	 * 系统启动初始化,将当前连接的数据库的信息加载到内存,生成hmNameToTable
 	 */
 	public void initDataBaseCache() {
-		System.out.println("拟美，终于可以junit测试了");
 		if (BaseDAO.hmNameToTable.size() == 0) {
 			switch (this.databaseType) {
 			case MyDBDefinition.DATABASE_TYPE_MYSQL:
@@ -127,7 +132,7 @@ public class BaseDAO {
 			// 生成Table
 			Table table = new Table(tableName);
 			table.setDesc(tableDesc);
-			this.hmNameToTable.put(tableName, table);
+			BaseDAO.hmNameToTable.put(tableName, table);
 			// 获取数据库中的表的所有栏位名
 			TableVO tvoColumn = this.queryForTableVOOnSQL("SELECT COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT FROM information_schema.COLUMNS WHERE table_name = '" + tableName
 					+ "' AND table_schema = '" + this.getDataBaseName() + "'");
@@ -315,7 +320,7 @@ public class BaseDAO {
 
 	/**
 	 * 根据传入的table,读取columnName等于value的[指定栏位]的TableVO数据.
-	 * SELECT table.attr,table.attr,table.attr... FROM table.tableName WHERE columnName = value
+	 * SELECT Table.columnName,Table.columnName,Table.columnName... FROM table.tableName WHERE columnName = value
 	 * @param tableName : 数据库表名
 	 * @param columnName : 栏位名
 	 * @param value : 值
@@ -327,7 +332,7 @@ public class BaseDAO {
 
 	/**
 	 * 根据传入的table,读取columnName等于value的[指定栏位]的TableVO数据,并依据orderBy排序
-	 * SELECT table.attr,table.attr,table.attr... FROM table.tableName WHERE columnName = value ORDER BY orderBy
+	 * SELECT Table.columnName,Table.columnName,Table.columnName... FROM table.tableName WHERE columnName = value ORDER BY orderBy
 	 * @param tableName : 数据库表名
 	 * @param columnName : 栏位名
 	 * @param value : 值
@@ -340,7 +345,7 @@ public class BaseDAO {
 
 	/**
 	 * 根据传入的table,读取columnName等于value的[指定栏位]的TableVO数据,并依据orderBy排序
-	 * SELECT table.attr,table.attr,table.attr... FROM table.tableName WHERE columnName = value ORDER BY orderBy
+	 * SELECT Table.columnName,Table.columnName,Table.columnName... FROM table.tableName WHERE columnName = value ORDER BY orderBy
 	 * @param tableName : 数据库表名
 	 * @param columnName : 栏位名
 	 * @param value : 值
@@ -396,7 +401,7 @@ public class BaseDAO {
 
 	/**
 	 * 根据传入的table,读取columnName In value的[指定栏位]的TableVO数据.
-	 * SELECT table.attr,table.attr,table.attr... FROM table.tableName WHERE columnName = value
+	 * SELECT Table.columnName,Table.columnName,Table.columnName... FROM table.tableName WHERE columnName = value
 	 * @param tableName : 数据库表名
 	 * @param columnName : 栏位名
 	 * @param value : 值
@@ -408,7 +413,7 @@ public class BaseDAO {
 
 	/**
 	 * 根据传入的table,读取columnName In value的[指定栏位]的TableVO数据,并依据orderBy排序
-	 * SELECT table.attr,table.attr,table.attr... FROM table.tableName WHERE columnName = value ORDER BY orderBy
+	 * SELECT Table.columnName,Table.columnName,Table.columnName... FROM table.tableName WHERE columnName = value ORDER BY orderBy
 	 * @param tableName : 数据库表名
 	 * @param columnName : 栏位名
 	 * @param value : 值
@@ -421,7 +426,7 @@ public class BaseDAO {
 
 	/**
 	 * 根据传入的table,读取columnName In value的[指定栏位]的TableVO数据,并依据orderBy排序
-	 * SELECT table.attr,table.attr,table.attr... FROM table.tableName WHERE columnName = value ORDER BY orderBy
+	 * SELECT Table.columnName,Table.columnName,Table.columnName... FROM table.tableName WHERE columnName = value ORDER BY orderBy
 	 * @param tableName : 数据库表名
 	 * @param columnName : 栏位名
 	 * @param value : 值
@@ -438,70 +443,70 @@ public class BaseDAO {
 
 	//============by DB Name
 	/**
-	 * 根据dbName查询数据库,没有where条件,
+	 * 根据tableName查询数据库,没有where条件,
 	 * SELECT * FROM 表名
-	 * @param dbName
+	 * @param tableName
 	 * @return TableVO
 	 */
-	public TableVO queryForTableVOByDBName(String dbName) {
-		return queryForTableVOByDBName(dbName, new OrderBy());
+	public TableVO queryForTableVO(String tableName) {
+		return queryForTableVO(tableName, new OrderBy());
 	}
 
 	/**
-	 * 根据dbName查询数据库,没有where条件,
+	 * 根据tableName查询数据库,没有where条件,
 	 * SELECT *. FROM 表名 order by
-	 * @param dbName
+	 * @param tableName
 	 * @param sort
 	 * @return TableVO
 	 */
-	public TableVO queryForTableVOByDBName(String dbName, Sort sort) {
-		return queryForTableVOByDBName(dbName, new OrderBy(sort));
+	public TableVO queryForTableVO(String tableName, Sort sort) {
+		return queryForTableVO(tableName, new OrderBy(sort));
 	}
 
 	/**
-	 * 根据dbName查询数据库,没有where条件,
+	 * 根据tableName查询数据库,没有where条件,
 	 * SELECT *. FROM 表名 order by
-	 * @param dbName
+	 * @param tableName
 	 * @param orderBy
 	 * @return TableVO
 	 */
-	public TableVO queryForTableVOByDBName(String dbName, OrderBy orderBy) {
-		return queryForTableVOByDBName(dbName, null, orderBy);
+	public TableVO queryForTableVO(String tableName, OrderBy orderBy) {
+		return queryForTableVO(tableName, null, orderBy);
 	}
 
 	/**
-	 * 根据dbName查询数据库,condSetBean里边放的是Where的条件.
+	 * 根据tableName查询数据库,condSetBean里边放的是Where的条件.
 	 * SELECT * FROM 表名 WHERE 条件
-	 * @param dbName
+	 * @param tableName
 	 * @param condSetBean
 	 * @return TableVO
 	 */
-	public TableVO queryForTableVOByDBName(String dbName, CondSetBean condSetBean) {
-		return queryForTableVOByDBName(dbName, condSetBean, new OrderBy());
+	public TableVO queryForTableVO(String tableName, CondSetBean condSetBean) {
+		return queryForTableVO(tableName, condSetBean, new OrderBy());
 	}
 
 	/**
-	 * 根据dbName查询数据库,condSetBean里边放的是Where的条件.
+	 * 根据tableName查询数据库,condSetBean里边放的是Where的条件.
 	 * SELECT * FROM 表名 WHERE 条件   order by 
-	 * @param dbName
+	 * @param tableName
 	 * @param condSetBean
 	 * @param sort
 	 * @return TableVO
 	 */
-	public TableVO queryForTableVOByDBName(String dbName, CondSetBean condSetBean, Sort sort) {
-		return queryForTableVOByDBName(dbName, condSetBean, new OrderBy(sort));
+	public TableVO queryForTableVO(String tableName, CondSetBean condSetBean, Sort sort) {
+		return queryForTableVO(tableName, condSetBean, new OrderBy(sort));
 	}
 
 	/**
-	 * 根据dbName查询数据库,condSetBean里边放的是Where的条件.
+	 * 根据tableName查询数据库,condSetBean里边放的是Where的条件.
 	 * SELECT * FROM 表名 WHERE 条件   order by 
-	 * @param dbName
+	 * @param tableName
 	 * @param condSetBean
 	 * @param orderBy
 	 * @return TableVO
 	 */
-	public TableVO queryForTableVOByDBName(String dbName, CondSetBean condSetBean, OrderBy orderBy) {
-		return queryForTableVO(new Table(dbName), condSetBean, orderBy);
+	public TableVO queryForTableVO(String tableName, CondSetBean condSetBean, OrderBy orderBy) {
+		return queryForTableVO(new Table(tableName), condSetBean, orderBy);
 	}
 
 	//============by DB Name
@@ -748,19 +753,19 @@ public class BaseDAO {
 	}
 
 	/**
-	 * 查询CN_ID=primaryId的dbName表记录
-	 * SELECT * FROM dbName WHERE CN_ID=primaryId
-	 * @param dbName
+	 * 查询CN_ID=primaryId的tableName表记录
+	 * SELECT * FROM tableName WHERE CN_ID=primaryId
+	 * @param tableName
 	 * @param primaryId
 	 * @return FormVO
 	 */
-	public FormVO queryForFormVOById(String dbName, String primaryId) {
-		return queryForFormVOById(new Table(dbName), primaryId);
+	public FormVO queryForFormVOById(String tableName, String primaryId) {
+		return queryForFormVOById(new Table(tableName), primaryId);
 	}
 
 	/**
 	 * 查询CN_ID=primaryId的table对应表记录,返回指定的字段.
-	 * SELECT table.attr,table.attr,table.attr... FROM table.dbName WHERE CN_ID=primaryId
+	 * SELECT Table.columnName,Table.columnName,Table.columnName... FROM table.tableName WHERE CN_ID=primaryId
 	 * @param table
 	 * @param primaryId
 	 * @return FormVO
@@ -772,13 +777,13 @@ public class BaseDAO {
 	}
 
 	/**
-	 * 根据dbName查询数据库,condSetBean里边放的是Where的条件.
+	 * 根据tableName查询数据库,condSetBean里边放的是Where的条件.
 	 * SELECT * FROM 表名 WHERE 条件
 	 * @param tableName
 	 * @param condSetBean
 	 * @return FormVO
 	 */
-	public FormVO queryForFormVOByDBName(String tableName, CondSetBean condSetBean) {
+	public FormVO queryForFormVO(String tableName, CondSetBean condSetBean) {
 		Table table = new Table(tableName);
 		return queryForFormVO(table, condSetBean);
 	}
@@ -907,7 +912,7 @@ public class BaseDAO {
 			if (orderBy != null && orderBy.isNotEmpty()) {
 				returnSQL.append(" ORDER BY ");
 				returnSQL.append(orderBy.toSQLString());
-			} else {
+			} else if (table.containsName(this.getPrimaryKeyColumnName())) {
 				// 如果用户没有设定orderby则使用主键排序.
 				returnSQL.append(" ORDER BY " + this.getPrimaryKeyColumnName());
 			}
@@ -1314,7 +1319,7 @@ public class BaseDAO {
 	 * @param tableName
 	 * @param inPrimaryIds
 	 */
-	public String deleteInId(String tableName, HashSet<String> inPrimaryIds) {
+	public String deleteInId(String tableName, Collection<String> inPrimaryIds) {
 		String errorMessage = null;
 		if (inPrimaryIds != null && inPrimaryIds.size() > 0 && StringUtils.isNotEmpty(inPrimaryIds.iterator().next())) {
 			if (inPrimaryIds.size() > 1000) {
@@ -1428,7 +1433,7 @@ public class BaseDAO {
 			String tableName = tableVO.getKey();
 			// get dataTable
 			if (StringUtils.isNotEmpty(tableName)) {
-				Table table = BaseDAO.hmNameToTable.get(tableName);
+				Table table = this.getTable(tableName);
 				DataVO dataVO = this.buildTableVOOnSaveOrUpdate(tableVO, table);
 				for (int i = 0; i < dataVO.sizeByTableVO(); i++) {
 					TableVO modifyTableVO = dataVO.getTableVO(i);
@@ -1459,21 +1464,15 @@ public class BaseDAO {
 		TableVO insertTableVO = new TableVO(tableVO.getKey(), TableVO.OPERATION_INSERT);
 		TableVO updateTableVO = new TableVO(tableVO.getKey(), TableVO.OPERATION_UPDATE);
 		try {
-			HashMap<String, String> hmDBNameToDBTypeId = new HashMap<String, String>();
-			HashMap<String, Boolean> hmDBNameIsRelation = new HashMap<String, Boolean>();
-			for (int i = 0; i < table.size(); i++) {
-				Column column = table.get(i);
-				hmDBNameToDBTypeId.put(column.getName(), column.getType());
-			}
 			RowVO[] rowVOs = tableVO.toRowVOArray();
 			for (int i = 0; i < rowVOs.length; i++) {
 				RowVO rowVO = rowVOs[i];
 				CellVO[] cellVOs = rowVO.toCellVOArray();
 				for (int j = 0; j < cellVOs.length; j++) {
 					CellVO cellVO = cellVOs[j];
-					String dbName = cellVO.getKey();
-					if (hmDBNameToDBTypeId.containsKey(dbName)) {
-						cellVO.setColumnType(hmDBNameToDBTypeId.get(dbName));
+					String columnName = cellVO.getKey();
+					if (table.containsName(columnName)) {
+						cellVO.setColumnType(table.get(columnName).getType());
 					} else {
 						rowVO.removeCellVO(cellVO);
 					}
@@ -1534,7 +1533,7 @@ public class BaseDAO {
 	 * @param onePageDataNumber   分页页面单页显示数据的数量,必须传
 	 * @return DataVO 
 	 * 		<ul>dataTableVO  => key : tableName
-	 *          <ul>CellVO key : Table.attribute.dbName</ul>/ul>
+	 *          <ul>CellVO key : Table.columnName</ul>/ul>
 	 * 		<ul>splitPageInfoFormVO  => key : splitPageInfoFormVO
 	 *          <ul>CellVO key : totalDataNumber,totalPageNumber,currentPaqeIndex,onePageDataNumber</ul></ul>
 	 */
@@ -1553,7 +1552,7 @@ public class BaseDAO {
 	 * @param sort
 	 * @return DataVO 
 	 * 		<ul>dataTableVO  => key : tableName
-	 *          <ul>CellVO key : Table.attribute.dbName</ul></ul>
+	 *          <ul>CellVO key : Table.columnName</ul></ul>
 	 * 		<ul>splitPageInfoFormVO  => key : splitPageInfoFormVO
 	 *          <ul>CellVO key : totalDataNumber,totalPageNumber,currentPaqeIndex,onePageDataNumber</ul></ul>
 	 */
@@ -1572,7 +1571,7 @@ public class BaseDAO {
 	 * @param orderBy
 	 * @return DataVO 
 	 * 		<ul>dataTableVO  => key : tableName
-	 *          <ul>CellVO key : Table.attribute.dbName</ul></ul>
+	 *          <ul>CellVO key : Table.columnName</ul></ul>
 	 * 		<ul>splitPageInfoFormVO  => key : splitPageInfoFormVO
 	 *          <ul>CellVO key : totalDataNumber,totalPageNumber,currentPaqeIndex,onePageDataNumber</ul></ul>
 	 */
@@ -1603,7 +1602,7 @@ public class BaseDAO {
 	 * @param sort
 	 * @return DataVO 
 	 * 		<ul>dataTableVO  => key : tableName
-	 *          <ul>CellVO key : Table.attribute.dbName</ul></ul>
+	 *          <ul>CellVO key : Table.columnName</ul></ul>
 	 * 		<ul>splitPageInfoFormVO  => key : splitPageInfoFormVO
 	 *          <ul>CellVO key : totalDataNumber,totalPageNumber,currentPaqeIndex,onePageDataNumber</ul></ul>
 	 */
@@ -1622,7 +1621,7 @@ public class BaseDAO {
 	 * @param orderB
 	 * @return DataVO 
 	 * 		<ul>dataTableVO  => key : tableName
-	 *          <ul>CellVO key : Table.attribute.dbName</ul></ul>
+	 *          <ul>CellVO key : Table.columnName</ul></ul>
 	 * 		<ul>splitPageInfoFormVO  => key : splitPageInfoFormVO
 	 *          <ul>CellVO key : totalDataNumber,totalPageNumber,currentPaqeIndex,onePageDataNumber</ul></ul>
 	 */

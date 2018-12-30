@@ -3,6 +3,8 @@ package hq.mydb.db;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import hq.mydb.data.RowVO;
+
 /**
  * 数据库表的映射
  * @author wanghq
@@ -14,6 +16,10 @@ public class Table {
 	private ArrayList<Column> alColumn = new ArrayList<Column>();// 表中的栏位
 	private HashMap<String, Column> hmNameToColumn = new HashMap<String, Column>();
 	private String desc;// 数据库中表的描述
+
+	public Table() {
+		super();
+	}
 
 	public Table(String name) {
 		super();
@@ -70,8 +76,17 @@ public class Table {
 	 * 添加一个Column
 	 * @param columnName
 	 */
-	public void addColumn(String columnName, String columnType,String columnDesc) {
-		Column column = new Column(columnName, columnType,columnDesc);
+	public void addColumn(String columnName) {
+		Column column = new Column(columnName);
+		this.addColumn(column);
+	}
+
+	/**
+	 * 添加一个Column
+	 * @param columnName
+	 */
+	public void addColumn(String columnName, String columnType, String columnDesc) {
+		Column column = new Column(columnName, columnType, columnDesc);
 		this.addColumn(column);
 	}
 
@@ -90,5 +105,23 @@ public class Table {
 	 */
 	public Column get(int index) {
 		return this.alColumn.get(index);
+	}
+
+	/**
+	 * 通过Column的name取到Column
+	 * @param columnName
+	 * @return Column
+	 */
+	public Column get(String columnName) {
+		return this.hmNameToColumn.get(columnName);
+	}
+
+	/**
+	 * 判断当前Table是否包含name = key的Column
+	 * @param key
+	 * @return
+	 */
+	public boolean containsName(String columnName) {
+		return this.hmNameToColumn.containsKey(columnName);
 	}
 }

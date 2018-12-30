@@ -1,6 +1,7 @@
 package hq.mydb.condition;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -117,19 +118,7 @@ public class CondSetBean {
 	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
 	 * @return
 	 */
-	public CondSetBean addCondBean_in(String key, ArrayList<?> value) {
-		CondBean condBean = new CondBean(key, CondBean.OPERATOR_IN, value);
-		this.addCondBean(condBean);
-		return this;
-	}
-
-	/**
-	 * 添加一个[IN]的条件
-	 * @param key : 查询的栏位,如 CN_NO
-	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
-	 * @return
-	 */
-	public CondSetBean addCondBean_in(String key, HashSet<?> value) {
+	public CondSetBean addCondBean_in(String key, Collection<?> value) {
 		CondBean condBean = new CondBean(key, CondBean.OPERATOR_IN, value);
 		this.addCondBean(condBean);
 		return this;
@@ -141,19 +130,7 @@ public class CondSetBean {
 	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
 	 * @return
 	 */
-	public CondSetBean addCondBean_notIn(String key, ArrayList<?> value) {
-		CondBean condBean = new CondBean(key, CondBean.OPERATOR_NOTIN, value);
-		this.addCondBean(condBean);
-		return this;
-	}
-
-	/**
-	 * 添加一个[NOT IN]的条件
-	 * @param key : 查询的栏位,如 CN_NO
-	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
-	 * @return
-	 */
-	public CondSetBean addCondBean_notIn(String key, HashSet<?> value) {
+	public CondSetBean addCondBean_notIn(String key, Collection<?> value) {
 		CondBean condBean = new CondBean(key, CondBean.OPERATOR_NOTIN, value);
 		this.addCondBean(condBean);
 		return this;
@@ -304,19 +281,7 @@ public class CondSetBean {
 	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
 	 * @return
 	 */
-	public CondSetBean addCondBean_and_in(String key, ArrayList<?> value) {
-		CondBean condBean = new CondBean(CondBean.JOIN_KEY_AND, key, CondBean.OPERATOR_IN, value);
-		this.addCondBean(condBean);
-		return this;
-	}
-
-	/**
-	 * 添加一个[IN]的条件
-	 * @param key : 查询的栏位,如 CN_NO
-	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
-	 * @return
-	 */
-	public CondSetBean addCondBean_and_in(String key, HashSet<?> value) {
+	public CondSetBean addCondBean_and_in(String key, Collection<?> value) {
 		CondBean condBean = new CondBean(CondBean.JOIN_KEY_AND, key, CondBean.OPERATOR_IN, value);
 		this.addCondBean(condBean);
 		return this;
@@ -328,19 +293,7 @@ public class CondSetBean {
 	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
 	 * @return
 	 */
-	public CondSetBean addCondBean_and_notIn(String key, ArrayList<?> value) {
-		CondBean condBean = new CondBean(CondBean.JOIN_KEY_AND, key, CondBean.OPERATOR_NOTIN, value);
-		this.addCondBean(condBean);
-		return this;
-	}
-
-	/**
-	 * 添加一个[NOT IN]的条件
-	 * @param key : 查询的栏位,如 CN_NO
-	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
-	 * @return
-	 */
-	public CondSetBean addCondBean_and_notIn(String key, HashSet<?> value) {
+	public CondSetBean addCondBean_and_notIn(String key, Collection<?> value) {
 		CondBean condBean = new CondBean(CondBean.JOIN_KEY_AND, key, CondBean.OPERATOR_NOTIN, value);
 		this.addCondBean(condBean);
 		return this;
@@ -492,19 +445,7 @@ public class CondSetBean {
 	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
 	 * @return
 	 */
-	public CondSetBean addCondBean_or_in(String key, ArrayList<?> value) {
-		CondBean condBean = new CondBean(CondBean.JOIN_KEY_OR, key, CondBean.OPERATOR_IN, value);
-		this.addCondBean(condBean);
-		return this;
-	}
-
-	/**
-	 * 添加一个[IN]的条件
-	 * @param key : 查询的栏位,如 CN_NO
-	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
-	 * @return
-	 */
-	public CondSetBean addCondBean_or_in(String key, HashSet<?> value) {
+	public CondSetBean addCondBean_or_in(String key, Collection<?> value) {
 		CondBean condBean = new CondBean(CondBean.JOIN_KEY_OR, key, CondBean.OPERATOR_IN, value);
 		this.addCondBean(condBean);
 		return this;
@@ -516,19 +457,7 @@ public class CondSetBean {
 	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
 	 * @return
 	 */
-	public CondSetBean addCondBean_or_notIn(String key, ArrayList<?> value) {
-		CondBean condBean = new CondBean(CondBean.JOIN_KEY_OR, key, CondBean.OPERATOR_NOTIN, value);
-		this.addCondBean(condBean);
-		return this;
-	}
-
-	/**
-	 * 添加一个[NOT IN]的条件
-	 * @param key : 查询的栏位,如 CN_NO
-	 * @param value : 值,Set<Object>类型可以是String,Integer,Long,Float,Double
-	 * @return
-	 */
-	public CondSetBean addCondBean_or_notIn(String key, HashSet<?> value) {
+	public CondSetBean addCondBean_or_notIn(String key, Collection<?> value) {
 		CondBean condBean = new CondBean(CondBean.JOIN_KEY_OR, key, CondBean.OPERATOR_NOTIN, value);
 		this.addCondBean(condBean);
 		return this;
@@ -635,8 +564,8 @@ public class CondSetBean {
 		}
 		return this.joinKey + " " + sbSQL;
 	}
-	
-	public int size(){
+
+	public int size() {
 		return this.alConditor.size();
 	}
 }

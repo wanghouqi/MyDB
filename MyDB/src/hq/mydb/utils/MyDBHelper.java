@@ -6,6 +6,10 @@ import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
@@ -16,7 +20,7 @@ import hq.mydb.exception.DAOException;
 
 public class MyDBHelper {
 	private static String primaryKeyColumnName = "";// 主键栏位名,通过BaseDAO初始化.
-	
+
 	public static String getPrimaryKeyColumnName() {
 		return primaryKeyColumnName;
 	}
@@ -579,5 +583,707 @@ public class MyDBHelper {
 			throw new RuntimeException(ex.getMessage());
 		}
 		return st;
+	}
+
+	/**
+	 * 获取某年第一天日期
+	 * @param year 年份 2016
+	 * @param format yyyy
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getFirstDayOfYear(String year, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(year, format);
+			returnValue = getFirstDayOfYear(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 获取某年第一天日期
+	 * @param datetime
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getFirstDayOfYear(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(Calendar.YEAR, Integer.parseInt(year));
+		return calendar.getTimeInMillis();
+	}
+
+	/**
+	 * 获取某年最后一天日期
+	 * @param year 年份 2016
+	 * @param format yyyy
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getLastDayOfYear(String year, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(year, format);
+			returnValue = getLastDayOfYear(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 获取某年最后一天日期
+	 * @param datetime
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getLastDayOfYear(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.roll(Calendar.DAY_OF_YEAR, -1);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 获取某年最后一秒
+	 * @param year 年份 2016
+	 * @param format yyyy
+	 * @return long 23点59分59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfYear(String year, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(year, format);
+			returnValue = getLastTimeOfYear(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 获取某年最后一秒
+	 * @param datetime
+	 * @return long 23点59分59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfYear(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.roll(Calendar.DAY_OF_YEAR, -1);
+		return getLastTimeOfDay(cal.getTimeInMillis());
+	}
+
+	/**
+	 * 得到某年某月的第一天
+	 * @param yearMonth 年月 2016-01
+	 * @param format yyyy-MM
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getFirstDayOfMonth(String yearMonth, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonth) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonth, format);
+			returnValue = getFirstDayOfMonth(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月的第一天
+	 * @param datetime
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getFirstDayOfMonth(long datetime) {
+		long returnValue = 0l;
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DATE));
+		return getFirstTimeOfDay(cal.getTimeInMillis());
+	}
+
+	/**
+	 * 得到某年某月的最后一天
+	 * @param yearMonth 年月 2016-01
+	 * @param format yyyy-MM
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getLastDayOfMonth(String yearMonth, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonth) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonth, format);
+			returnValue = getLastDayOfMonth(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月的最后一天
+	 * @param datetime
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getLastDayOfMonth(long datetime) {
+		long returnValue = 0l;
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		int dayvalue = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		cal.set(Calendar.DAY_OF_MONTH, dayvalue);
+		return getFirstTimeOfDay(cal.getTimeInMillis());
+	}
+
+	/**
+	 * 获取某年最后一秒
+	 * @param yearMonth 年月 2016-01
+	 * @param format yyyy-MM
+	 * @return long 23点59分59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfMonth(String yearMonth, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonth) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonth, format);
+			returnValue = getLastTimeOfMonth(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 获取某年最后一秒
+	 * @param datetime
+	 * @return long 23点59分59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfMonth(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		int dayvalue = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		cal.set(Calendar.DAY_OF_MONTH, dayvalue);
+		return getLastTimeOfDay(cal.getTimeInMillis());
+	}
+
+	/**
+	 * 得到某年某月某日的开始时间
+	 * @param yearMonthDay 年月 2016-01-01
+	 * @param format yyyy-MM-dd
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getFirstTimeOfDay(String yearMonthDay, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonthDay) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonthDay, format);
+			returnValue = getFirstTimeOfDay(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月某日的开始时间
+	 * @param datetime
+	 * @return long 0点0分0秒0毫秒的long值
+	 */
+	public static long getFirstTimeOfDay(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		String day = formatDate(datetime, "dd");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 得到某年某月某日的结束时间
+	 * @param yearMonthDay 年月 2016-01-01
+	 * @param format yyyy-MM-dd
+	 * @return long 23点59分59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfDay(String yearMonthDay, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonthDay) && StringUtils.isNotBlank(format)) {
+			long date = getDatetime(yearMonthDay, format);
+			String year = formatDate(date, "yyyy");
+			String month = formatDate(date, "MM");
+			String day = formatDate(date, "dd");
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.YEAR, Integer.parseInt(year));
+			cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+			cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MILLISECOND, 999);
+			returnValue = cal.getTimeInMillis();
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月某日的结束时间
+	 * @param datetime
+	 * @return long 23点59分59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfDay(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		String day = formatDate(datetime, "dd");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 得到某年某月某日某时的开始时间
+	 * @param yearMonthDayHour 年月 2016-01-01 01
+	 * @param format yyyy-MM-dd HH
+	 * @return long 0分0秒0毫秒的long值
+	 */
+	public static long getFirstTimeOfHour(String yearMonthDayHour, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonthDayHour) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonthDayHour, format);
+			returnValue = getFirstTimeOfHour(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月某日某时的开始时间
+	 * @param datetime
+	 * @return long 0分0秒0毫秒的long值
+	 */
+	public static long getFirstTimeOfHour(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		String day = formatDate(datetime, "dd");
+		String hour = formatDate(datetime, "HH");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 得到某年某月某日某时的结束时间
+	 * @param yearMonthDayHour 年月 2016-01-01 01
+	 * @param format yyyy-MM-dd HH
+	 * @return long 59分59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfHour(String yearMonthDayHour, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonthDayHour) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonthDayHour, format);
+			returnValue = getLastTimeOfHour(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月某日某时的结束时间
+	 * @param datetime
+	 * @return long 59分59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfHour(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		String day = formatDate(datetime, "dd");
+		String hour = formatDate(datetime, "HH");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 得到某年某月某日某时某分的开始时间
+	 * @param yearMonthDayHourMinute 年月 2016-01-01 01:01
+	 * @param format yyyy-MM-dd HH:mm
+	 * @return long 0秒0毫秒的long值
+	 */
+	public static long getFirstTimeOfMinute(String yearMonthDayHourMinute, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonthDayHourMinute) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonthDayHourMinute, format);
+			returnValue = getFirstTimeOfMinute(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月某日某时某分的开始时间
+	 * @param datetime
+	 * @return long 0秒0毫秒的long值
+	 */
+	public static long getFirstTimeOfMinute(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		String day = formatDate(datetime, "dd");
+		String hour = formatDate(datetime, "HH");
+		String min = formatDate(datetime, "mm");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
+		cal.set(Calendar.MINUTE, Integer.parseInt(min));
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 得到某年某月某日某时某分的结束时间
+	 * @param yearMonthDayHourMinute 年月 2016-01-01 01:01
+	 * @param format yyyy-MM-dd HH:mm
+	 * @return long 59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfMinute(String yearMonthDayHourMinute, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonthDayHourMinute) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonthDayHourMinute, format);
+			returnValue = getLastTimeOfMinute(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月某日某时某分的结束时间
+	 * @param datetime
+	 * @return long 59秒999毫秒的long值
+	 */
+	public static long getLastTimeOfMinute(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		String day = formatDate(datetime, "dd");
+		String hour = formatDate(datetime, "HH");
+		String min = formatDate(datetime, "mm");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
+		cal.set(Calendar.MINUTE, Integer.parseInt(min));
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 得到某年某月某日某时某分某秒的开始时间
+	 * @param yearMonthDayHourMinuteSecond 年月 2016-01-01 01:01:01
+	 * @param format yyyy-MM-dd HH:mm:ss
+	 * @return long 0毫秒的long值
+	 */
+	public static long getFirstTimeOfSecond(String yearMonthDayHourMinuteSecond, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonthDayHourMinuteSecond) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonthDayHourMinuteSecond, format);
+			returnValue = getFirstTimeOfSecond(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月某日某时某分某秒的开始时间
+	 * @param datetime
+	 * @return long 0毫秒的long值
+	 */
+	public static long getFirstTimeOfSecond(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		String day = formatDate(datetime, "dd");
+		String hour = formatDate(datetime, "HH");
+		String min = formatDate(datetime, "mm");
+		String second = formatDate(datetime, "ss");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
+		cal.set(Calendar.MINUTE, Integer.parseInt(min));
+		cal.set(Calendar.SECOND, Integer.parseInt(second));
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 得到某年某月某日某时某分某秒的结束时间
+	 * @param yearMonthDayHourMinuteSecond 年月 2016-01-01 01:01:01
+	 * @param format yyyy-MM-dd HH:mm:ss
+	 * @return long 999毫秒的long值
+	 */
+	public static long getLastTimeOfSecond(String yearMonthDayHourMinuteSecond, String format) {
+		long returnValue = 0l;
+		if (StringUtils.isNotBlank(yearMonthDayHourMinuteSecond) && StringUtils.isNotBlank(format)) {
+			long datetime = getDatetime(yearMonthDayHourMinuteSecond, format);
+			returnValue = getLastTimeOfSecond(datetime);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * 得到某年某月某日某时某分某秒的结束时间
+	 * @param datetime
+	 * @return long 999毫秒的long值
+	 */
+	public static long getLastTimeOfSecond(long datetime) {
+		String year = formatDate(datetime, "yyyy");
+		String month = formatDate(datetime, "MM");
+		String day = formatDate(datetime, "dd");
+		String hour = formatDate(datetime, "HH");
+		String min = formatDate(datetime, "mm");
+		String second = formatDate(datetime, "ss");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
+		cal.set(Calendar.MINUTE, Integer.parseInt(min));
+		cal.set(Calendar.SECOND, Integer.parseInt(second));
+		cal.set(Calendar.MILLISECOND, 999);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * 将日期转换为Long值
+	 *
+	 * @param dateStr
+	 * <ul>           String : 2018-12-01</ul>
+	 * @param format
+	 * <ul>           String : yyyy-MM-dd HH:mm:ss</ul>
+	 * @return long
+	 */
+	public static Date getDate(String dateStr, String format) {
+		Date date = null;
+		try {
+			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			if (StringUtils.isNotEmpty(format)) {
+				sf = new SimpleDateFormat(format);
+			}
+			date = sf.parse(dateStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//继续转换得到秒数的long型
+		return date;
+	}
+
+	/**
+	 * 将日期转换为Long值
+	 *
+	 * @param dateStr
+	 * <ul>           String : 2018-12-01</ul>
+	 * @param format
+	 * <ul>           String : yyyy-MM-dd HH:mm:ss</ul>
+	 * @return long
+	 */
+	public static long getDatetime(String dateStr, String format) {
+		long time = 0;
+		try {
+			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			if (StringUtils.isNotEmpty(format)) {
+				sf = new SimpleDateFormat(format);
+			}
+			Date date = sf.parse(dateStr);
+			time = date.getTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//继续转换得到秒数的long型
+		return time;
+	}
+
+	/**
+	 * 将当前long值格式化"yyyy-MM-dd"
+	 * @param date
+	 * @return
+	 */
+	public static String formatDate(long date) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		String ret = sf.format(new Date(date));
+		return ret;
+	}
+
+	/**
+	 * 将当前long值依据format格式化
+	 *
+	 * @param date
+	 * <ul>           long</ul>
+	 * @param format
+	 * <ul>           String</ul>
+	 * @return String
+	 */
+	public static String formatDate(long date, String format) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		if (!StringUtils.isEmpty(format)) {
+			sf = new SimpleDateFormat(format);
+		}
+		String ret = sf.format(new Date(date));
+		return ret;
+	}
+
+	/**
+	 * 将当前long值依据format格式化对应locale时区的字符窜.
+	 *
+	 * @param date
+	 * <ul>           long</ul>
+	 * @param format
+	 * <ul>           String</ul>
+	 * @param locale
+	 * @return String
+	 */
+	public static String formatLocalDate(long date, String format, Locale locale) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", locale);
+		if (!StringUtils.isEmpty(format)) {
+			sf = new SimpleDateFormat(format, locale);
+		}
+		String ret = sf.format(new Date(date));
+		return ret;
+	}
+
+	/**
+	 * 将当前long值格式化"yyyy-MM-dd"
+	 * @param date
+	 * @return
+	 */
+	public static String formatDate(Date date) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		String ret = sf.format(date);
+		return ret;
+	}
+
+	/**
+	 * 将当前long值依据format格式化
+	 *
+	 * @param date
+	 * <ul>           long</ul>
+	 * @param format
+	 * <ul>           String</ul>
+	 * @return String
+	 */
+	public static String formatDate(Date date, String format) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		if (!StringUtils.isEmpty(format)) {
+			sf = new SimpleDateFormat(format);
+		}
+		String ret = sf.format(date);
+		return ret;
+	}
+
+	/**
+	 * 将当前long值依据format格式化对应locale时区的字符窜.
+	 *
+	 * @param date
+	 * <ul>           long</ul>
+	 * @param format
+	 * <ul>           String</ul>
+	 * @param locale
+	 * @return String
+	 */
+	public static String formatLocalFormatDate(Date date, String format, Locale locale) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", locale);
+		if (!StringUtils.isEmpty(format)) {
+			sf = new SimpleDateFormat(format, locale);
+		}
+		String ret = sf.format(date);
+		return ret;
+	}
+
+	/**
+	 * 根据传入的日期字符窜,返回对应的Calendar
+	 * @param dateStr : 2017-12-12
+	 * @param format : yyyy-MM-dd
+	 * @return
+	 */
+	public static Calendar getCalendar(String dateStr, String format) {
+		return getCalendar(getDate(dateStr, format));
+	}
+
+	/**
+	 * 根据传入的日期字符窜,返回对应的Calendar
+	 * @param date
+	 * @return
+	 */
+	public static Calendar getCalendar(long date) {
+		return getCalendar(new Date(date));
+	}
+
+	/**
+	 * 根据传入的日期字符窜,返回对应的Calendar
+	 * @param date
+	 * @return
+	 */
+	public static Calendar getCalendar(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal;
+	}
+
+	/**
+	 * 将传入的日期根据day的正负,向前或向后计算得到新的天数返回
+	 * @param date : 日期 2017-01-01
+	 * @param format : 转化格式 yyyy-MM-dd
+	 * @param day : 正负整数
+	 * @return
+	 */
+	public static long getMoveDate(String date, String format, int day) {
+		return getMoveDate(getDatetime(date, format), day);
+	}
+
+	/**
+	 * 将传入的日期根据day的正负,向前或向后计算得到新的天数返回
+	 * @param dateLong : 日期 1505811080000
+	 * @param day : 正负整数
+	 * @return
+	 */
+	public static long getMoveDate(String dateLong, int day) {
+		return getMoveDate(Long.parseLong(dateLong), day);
+	}
+
+	/**
+	 * 将传入的日期根据day的正负,向前或向后计算得到新的天数返回
+	 * @param dateLong : 日期 1505811080000
+	 * @param day : 正负整数
+	 * @return
+	 */
+	public static long getMoveDate(Date date, int day) {
+		return getMoveDate(date.getTime(), day);
+	}
+
+	/**
+	 * 将传入的日期根据day的正负,向前或向后计算得到新的天数返回
+	 * @param date : 日期 1505811080000
+	 * @param day : 正负整数
+	 * @return
+	 */
+	public static long getMoveDate(long date, int day) {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(date);
+		c.add(Calendar.DAY_OF_MONTH, day);// 今天+1天  
+		return c.getTimeInMillis();
 	}
 }

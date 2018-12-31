@@ -61,7 +61,7 @@ public class TableVO extends DataObject {
 		if (rvoHead == null) {
 			rvoHead = new RowVO();
 			if (this.size() > 0) {
-				for (CellVO cellVO : this.get(0).toCellVOArray()) {
+				for (CellVO cellVO : this.get(0).toCellVOs()) {
 					rvoHead.addCellVO(new CellVO(cellVO.getKey(), cellVO.getKey()));
 				}
 			}
@@ -234,9 +234,9 @@ public class TableVO extends DataObject {
 		return cloneTableVO;
 	}
 
-	public RowVO[] toRowVOArray() {
+	public RowVO[] toRowVOs() {
 		RowVO[] rowVOs = new RowVO[this.size()];
-		super.toArrayFromChildVOArray(rowVOs);
+		super.toArrayFromChildVOs(rowVOs);
 		return rowVOs;
 	}
 
@@ -580,14 +580,14 @@ public class TableVO extends DataObject {
 		RowVO rbHead = null;
 		if (this.size() > 0) {
 			rbHead = this.get(0);
-			for (CellVO cb : rbHead.toCellVOArray()) {
+			for (CellVO cb : rbHead.toCellVOs()) {
 				sb.append(cb.getKey() + "\t");
 			}
 		}
 		sb.append("\n");
 		// 数据
-		for (RowVO rb : this.toRowVOArray()) {
-			for (CellVO cbHead : rbHead.toCellVOArray()) {
+		for (RowVO rb : this.toRowVOs()) {
+			for (CellVO cbHead : rbHead.toCellVOs()) {
 				sb.append(rb.getCellVOValue(cbHead.getKey()) + "\t");
 			}
 			sb.append("\n");

@@ -239,9 +239,9 @@ public class RowVO extends DataObject {
 		super.removeChildVO(key);
 	}
 
-	public CellVO[] toCellVOArray() {
+	public CellVO[] toCellVOs() {
 		CellVO[] cellVOs = new CellVO[this.size()];
-		super.toArrayFromChildVOArray(cellVOs);
+		super.toArrayFromChildVOs(cellVOs);
 		return cellVOs;
 	}
 

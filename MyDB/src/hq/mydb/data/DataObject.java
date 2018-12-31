@@ -263,7 +263,7 @@ public abstract class DataObject implements Serializable {
 	 * @param childVOs
 	 * @return
 	 */
-	protected DataObject[] toArrayFromChildVOArray(DataObject[] childVOs) {
+	protected DataObject[] toArrayFromChildVOs(DataObject[] childVOs) {
 		return this.alChildVO.toArray(childVOs);
 	}
 
@@ -273,7 +273,7 @@ public abstract class DataObject implements Serializable {
 	 */
 	protected int clearChildVO() {
 		int size = alChildVO.size();
-		DataObject[] componentBeans = this.toArrayFromChildVOArray(new DataObject[size]);
+		DataObject[] componentBeans = this.toArrayFromChildVOs(new DataObject[size]);
 		for (DataObject componentBean : componentBeans) {
 			this.removeChildVO(componentBean);
 		}

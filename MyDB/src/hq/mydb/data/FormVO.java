@@ -288,9 +288,9 @@ public class FormVO extends DataObject {
 		super.removeChildVO(key);
 	}
 
-	public CellVO[] toCellVOArray() {
+	public CellVO[] toCellVOs() {
 		CellVO[] cellVOs = new CellVO[this.size()];
-		super.toArrayFromChildVOArray(cellVOs);
+		super.toArrayFromChildVOs(cellVOs);
 		return cellVOs;
 	}
 
@@ -332,7 +332,7 @@ public class FormVO extends DataObject {
 		sb.append("Key" + "\t" + (StringUtils.isEmpty(this.getKey()) ? "" : this.getKey()) + "\n");
 		sb.append("Operation" + "\t" + this.getOperation() + "\n");
 		// 数据
-		for (CellVO cb : this.toCellVOArray()) {
+		for (CellVO cb : this.toCellVOs()) {
 			sb.append(cb.getKey() + "\t" + cb.getValue() + "\n");
 		}
 		return sb.toString();

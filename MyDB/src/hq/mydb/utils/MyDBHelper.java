@@ -696,6 +696,7 @@ public class MyDBHelper {
 		String year = formatDate(datetime, "yyyy");
 		String month = formatDate(datetime, "MM");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DATE));
@@ -723,10 +724,10 @@ public class MyDBHelper {
 	 * @return long 0点0分0秒0毫秒的long值
 	 */
 	public static long getLastDayOfMonth(long datetime) {
-		long returnValue = 0l;
 		String year = formatDate(datetime, "yyyy");
 		String month = formatDate(datetime, "MM");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		int dayvalue = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -758,6 +759,7 @@ public class MyDBHelper {
 		String year = formatDate(datetime, "yyyy");
 		String month = formatDate(datetime, "MM");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		int dayvalue = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -790,6 +792,7 @@ public class MyDBHelper {
 		String month = formatDate(datetime, "MM");
 		String day = formatDate(datetime, "dd");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -814,6 +817,7 @@ public class MyDBHelper {
 			String month = formatDate(date, "MM");
 			String day = formatDate(date, "dd");
 			Calendar cal = Calendar.getInstance();
+			cal.clear();
 			cal.set(Calendar.YEAR, Integer.parseInt(year));
 			cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 			cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -836,6 +840,7 @@ public class MyDBHelper {
 		String month = formatDate(datetime, "MM");
 		String day = formatDate(datetime, "dd");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -872,6 +877,7 @@ public class MyDBHelper {
 		String day = formatDate(datetime, "dd");
 		String hour = formatDate(datetime, "HH");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -908,6 +914,7 @@ public class MyDBHelper {
 		String day = formatDate(datetime, "dd");
 		String hour = formatDate(datetime, "HH");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -945,6 +952,7 @@ public class MyDBHelper {
 		String hour = formatDate(datetime, "HH");
 		String min = formatDate(datetime, "mm");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -982,6 +990,7 @@ public class MyDBHelper {
 		String hour = formatDate(datetime, "HH");
 		String min = formatDate(datetime, "mm");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -1020,6 +1029,7 @@ public class MyDBHelper {
 		String min = formatDate(datetime, "mm");
 		String second = formatDate(datetime, "ss");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -1058,6 +1068,7 @@ public class MyDBHelper {
 		String min = formatDate(datetime, "mm");
 		String second = formatDate(datetime, "ss");
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.set(Calendar.YEAR, Integer.parseInt(year));
 		cal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
@@ -1239,6 +1250,7 @@ public class MyDBHelper {
 	 */
 	public static Calendar getCalendar(Date date) {
 		Calendar cal = Calendar.getInstance();
+		cal.clear();
 		cal.setTime(date);
 		return cal;
 	}
@@ -1281,9 +1293,10 @@ public class MyDBHelper {
 	 * @return
 	 */
 	public static long getMoveDate(long date, int day) {
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(date);
-		c.add(Calendar.DAY_OF_MONTH, day);// 今天+1天  
-		return c.getTimeInMillis();
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.setTimeInMillis(date);
+		cal.add(Calendar.DAY_OF_MONTH, day);// 今天+1天  
+		return cal.getTimeInMillis();
 	}
 }

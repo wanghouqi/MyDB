@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import hq.mydb.db.Column;
 import hq.mydb.utils.MyDBHelper;
 
 /**
@@ -609,4 +610,21 @@ public class TableVO extends DataObject {
 		}
 		return arr;
 	}
+
+	/**
+	 * 对指定列进行日期的格式化
+	 * @param format : 格式,例: yyyy-MM-dd
+	 * @param columnNames : 需要格式化的栏位名
+	 */
+	public void formatDate(String format, String... columnNames) {
+		for (RowVO rvo : this.toRowVOs()) {
+			for (String columnName : columnNames) {
+				String value = rvo.getCellVOValue(columnName);
+				if (StringUtils.isNotBlank(value)) {
+					rvo.setCellVOValue(columnName, MyDBHelper.formatDate(Long.parseLong(value), format));
+				}
+			}
+		}
+	}
+
 }

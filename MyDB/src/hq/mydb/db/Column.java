@@ -1,7 +1,5 @@
 package hq.mydb.db;
 
-import java.util.ArrayList;
-
 import org.apache.commons.codec.binary.StringUtils;
 
 /**
@@ -10,7 +8,7 @@ import org.apache.commons.codec.binary.StringUtils;
  *
  */
 public class Column {
-	public static final String TYPE_LONG = "long"; // 长整数
+	public static final String TYPE_LONG = "bigint"; // 长整数
 	public static final String TYPE_DATE = "date"; // 日期
 	public static final String TYPE_DATETIME = "datetime"; // 日期加时间
 	public static final String TYPE_DECIMAL = "decimal"; // 小数

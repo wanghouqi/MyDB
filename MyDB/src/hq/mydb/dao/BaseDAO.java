@@ -141,7 +141,7 @@ public class BaseDAO {
 				String columnType = rvoColumn.getCellVOValue("DATA_TYPE");
 				String columnDesc = rvoColumn.getCellVOValue("COLUMN_COMMENT");
 				// 添加Column
-				table.addColumn(columnName, columnType, columnDesc);
+				table.addColumn(columnName, columnType.toLowerCase(), columnDesc);
 			}
 		}
 	}

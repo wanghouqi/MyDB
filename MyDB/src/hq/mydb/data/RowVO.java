@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.alibaba.fastjson.JSONObject;
+
+import hq.mydb.db.Column;
 import hq.mydb.utils.MyDBHelper;
 
 /**
@@ -271,5 +274,37 @@ public class RowVO extends DataObject {
 			formVO.addCellVO(new CellVO(this.get(i).getKey(), this.get(i).getValue()));
 		}
 		return formVO;
+	}
+
+	/**
+	 * 返回RowVO中的所有的CellVO对应的Key和Value对应生成的JSONObject
+	 * @return
+	 */
+	public JSONObject toDataJSONObject() {
+		JSONObject obj = new JSONObject();
+		for (CellVO cvo : this.toCellVOs()) {
+			if (StringUtils.isEmpty(cvo.getValue())) {
+				obj.put(cvo.getKey(), cvo.getValue());
+				continue;
+			}
+			switch (cvo.getColumnType()) {
+			case Column.TYPE_LONG: // 长整数
+			case Column.TYPE_DATE: // 日期
+			case Column.TYPE_DATETIME: // 日期加时间
+				obj.put(cvo.getKey(), Long.parseLong(cvo.getValue()));
+				break;
+			case Column.TYPE_DECIMAL: // 小数
+				obj.put(cvo.getKey(), Double.parseDouble(cvo.getValue()));
+				break;
+			case Column.TYPE_TEXT: // 文本
+			case Column.TYPE_VARCHAR: // 字符
+				obj.put(cvo.getKey(), cvo.getValue());
+				break;
+			default:
+				obj.put(cvo.getKey(), cvo.getValue());
+				break;
+			}
+		}
+		return obj;
 	}
 }

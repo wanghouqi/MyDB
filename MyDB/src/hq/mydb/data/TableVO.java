@@ -6,6 +6,9 @@ import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import hq.mydb.utils.MyDBHelper;
 
 /**
@@ -593,5 +596,17 @@ public class TableVO extends DataObject {
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 返回TableVO中的RowVO的JSONObject的JSONArray
+	 * @return
+	 */
+	public JSONArray toDataJSONArray() {
+		JSONArray arr = new JSONArray();
+		for (RowVO rvo : this.toRowVOs()) {
+			arr.add(rvo.toDataJSONObject());
+		}
+		return arr;
 	}
 }

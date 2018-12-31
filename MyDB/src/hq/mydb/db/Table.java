@@ -3,8 +3,6 @@ package hq.mydb.db;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import hq.mydb.data.RowVO;
-
 /**
  * 数据库表的映射
  * @author wanghq

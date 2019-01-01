@@ -1,15 +1,17 @@
 package hq.mydb.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
-import hq.mydb.db.Column;
+import hq.mydb.comparator.StringComparator;
+import hq.mydb.orderby.Sort;
 import hq.mydb.utils.MyDBHelper;
 
 /**
@@ -627,4 +629,86 @@ public class TableVO extends DataObject {
 		}
 	}
 
+	/**
+	 * 对当前TableVO中的RowVO进行排序
+	 * @param sorts 
+	 */
+	public void sortByColumn(Sort... sorts) {
+		for (Sort sort : sorts) {
+			sortTableByCellBeanKey(sort.getColumnName(), sort.getSort(), sort.isNumber());
+		}
+	}
+
+	/**
+	 * 将传入的tableBean按照cellBeanKey根据sort排序其内的RowVO
+	 * @param tableBean
+	 * @param cellBeanKey
+	 * @param sort :  排序方式,Sort.ASC | Sort.DESC 
+	 */
+	public void sortTableByCellBeanKey(String cellVOKey, String sort, boolean isNumber) {
+		HashMap<String, ArrayList<RowVO>> hmSort = new HashMap<String, ArrayList<RowVO>>(); // 用于记录cellBeanKey里的Value所对应的RowVO数组(可能有相同的值)
+		ArrayList<String> keyArray = new ArrayList<String>(); // cellBeanKey对应的Value,用于排序
+		RowVO[] rowVOs = this.toRowVOs();
+		String numberFormat = "0.00000000";
+		for (int i = 0; i < rowVOs.length; i++) {
+			RowVO rowVO = rowVOs[i];
+			this.removeRowVO(rowVO);// 清空原有的RowVO
+			String value = rowVO.getCellVOValue(cellVOKey);
+			if (StringUtils.isEmpty(value)) {
+				value = "-9999999";
+			}
+			if (isNumber) {
+				value = MyDBHelper.formatNumber(Double.parseDouble(value), numberFormat);
+			}
+			if (!keyArray.contains(value)) {
+				keyArray.add(value);
+			}
+			ArrayList<RowVO> al;
+			if (hmSort.containsKey(value)) {
+				al = hmSort.get(value);
+			} else {
+				al = new ArrayList<RowVO>();
+				hmSort.put(value, al);
+			}
+			al.add(rowVO);
+		}
+		Object[] keys;
+		if (isNumber) {
+			keys = new Double[keyArray.size()];
+			for (int i = 0; i < keyArray.size(); i++) {
+				keys[i] = Double.parseDouble(keyArray.get(i));
+			}
+			Arrays.sort(keys);
+		} else {
+			Collections.sort(keyArray, new StringComparator());
+			keys = keyArray.toArray();
+		}
+
+		// 按顺序将排序后的RowVO放回到tableBean
+		if (Sort.DESC.equals(sort)) {
+			// 倒序
+			for (int i = keys.length - 1; i >= 0; i--) {
+				String key = String.valueOf(keys[i]);
+				if (isNumber) {
+					key = MyDBHelper.formatNumber(Double.parseDouble(key), numberFormat);
+				}
+				ArrayList<RowVO> al = hmSort.get(key);
+				for (int j = 0; j < al.size(); j++) {
+					this.addRowVO(al.get(j));
+				}
+			}
+		} else {
+			// 正序
+			for (int i = 0; i < keys.length; i++) {
+				String key = String.valueOf(keys[i]);
+				if (isNumber) {
+					key = MyDBHelper.formatNumber(Double.parseDouble(key), numberFormat);
+				}
+				ArrayList<RowVO> al = hmSort.get(key);
+				for (int j = 0; j < al.size(); j++) {
+					this.addRowVO(al.get(j));
+				}
+			}
+		}
+	}
 }

@@ -634,7 +634,8 @@ public class TableVO extends DataObject {
 	 * @param sorts 
 	 */
 	public void sortByColumn(Sort... sorts) {
-		for (Sort sort : sorts) {
+		for (int i = sorts.length-1; i >=0 ; i--) {
+			Sort sort = sorts[i];
 			sortTableByCellBeanKey(sort.getColumnName(), sort.getSort(), sort.isNumber());
 		}
 	}

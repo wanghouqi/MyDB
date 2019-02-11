@@ -1132,7 +1132,7 @@ public class BaseDAO {
 	public void update(FormVO formVO) {
 		try {
 			if (formVO.size() > 0) {
-				if (StringUtils.equals(formVO.getOperation(), FormVO.OPERATION_UPDATE)) {
+				if (formVO.getOperation() == FormVO.OPERATION_UPDATE) {
 					TableVO tableVO = new TableVO(formVO.getKey(), formVO.getOperation());
 					tableVO.addRowVO(formVO.transformToRowVO());
 					this.update(tableVO);
@@ -1157,7 +1157,7 @@ public class BaseDAO {
 	public void update(TableVO tableVO) {
 		try {
 			if (tableVO.size() > 0) {
-				if (StringUtils.equals(tableVO.getOperation(), TableVO.OPERATION_UPDATE)) {
+				if (tableVO.getOperation() == TableVO.OPERATION_UPDATE) {
 					ArrayList<String> sqls = tableVO.toSQLStrings();
 					for (int i = 0; i < sqls.size(); i++) {
 						this.update(sqls.get(i));
@@ -1209,7 +1209,7 @@ public class BaseDAO {
 	public void insert(FormVO formVO) {
 		try {
 			if (formVO.size() > 0) {
-				if (StringUtils.equals(formVO.getOperation(), FormVO.OPERATION_INSERT)) {
+				if (formVO.getOperation() == FormVO.OPERATION_INSERT) {
 					TableVO tableVO = new TableVO(formVO.getKey(), formVO.getOperation());
 					RowVO rowVO = new RowVO();
 					tableVO.addRowVO(rowVO);
@@ -1250,7 +1250,7 @@ public class BaseDAO {
 	 */
 	public void insert(TableVO tableVO) {
 		try {
-			if (StringUtils.equals(tableVO.getOperation(), TableVO.OPERATION_INSERT)) {
+			if (tableVO.getOperation() == TableVO.OPERATION_INSERT) {
 				// 放入主键
 				for (int i = 0; i < tableVO.size(); i++) {
 					RowVO rowVO = tableVO.get(i);
@@ -1437,9 +1437,9 @@ public class BaseDAO {
 				DataVO dataVO = this.buildTableVOOnSaveOrUpdate(tableVO, table);
 				for (int i = 0; i < dataVO.sizeByTableVO(); i++) {
 					TableVO modifyTableVO = dataVO.getTableVO(i);
-					if (StringUtils.equals(modifyTableVO.getOperation(), DataObject.OPERATION_INSERT)) {
+					if (modifyTableVO.getOperation() == DataObject.OPERATION_INSERT) {
 						this.insert(modifyTableVO);
-					} else if (StringUtils.equals(modifyTableVO.getOperation(), DataObject.OPERATION_UPDATE)) {
+					} else if (modifyTableVO.getOperation() == DataObject.OPERATION_UPDATE) {
 						this.update(modifyTableVO);
 					}
 				}
@@ -1478,15 +1478,15 @@ public class BaseDAO {
 					}
 				}
 				if (rowVO.size() > 0) {
-					if (StringUtils.equals(tableVO.getOperation(), TableVO.OPERATION_INSERT)) {
+					if (tableVO.getOperation() == TableVO.OPERATION_INSERT) {
 						insertTableVO.addRowVO(rowVO);
 						rowVO.setOperation(RowVO.OPERATION_INSERT);
-					} else if (StringUtils.equals(tableVO.getOperation(), TableVO.OPERATION_UPDATE)) {
+					} else if (tableVO.getOperation() == TableVO.OPERATION_UPDATE) {
 						updateTableVO.addRowVO(rowVO);
 						rowVO.setOperation(RowVO.OPERATION_UPDATE);
-					} else if (StringUtils.equals(rowVO.getOperation(), RowVO.OPERATION_INSERT)) {
+					} else if (rowVO.getOperation() == RowVO.OPERATION_INSERT) {
 						insertTableVO.addRowVO(rowVO);
-					} else if (StringUtils.equals(rowVO.getOperation(), RowVO.OPERATION_UPDATE)) {
+					} else if (rowVO.getOperation() == RowVO.OPERATION_UPDATE) {
 						updateTableVO.addRowVO(rowVO);
 					} else {
 						if (rowVO.containsKey(this.getPrimaryKeyColumnName())) {

@@ -18,7 +18,7 @@ import hq.mydb.utils.MyDBHelper;
  */
 public class FormVO extends DataObject {
 	private static final long serialVersionUID = -1072732898273007877L;
-	private String operation = DataObject.OPERATION_UNDEFINED; // 当前FormVO用于生成SQL时对应的数据库操作类型.
+	private char operation = DataObject.OPERATION_UNDEFINED; // 当前FormVO用于生成SQL时对应的数据库操作类型.
 	private CondSetBean condSetBean; // 用户生成Update语句的条件
 
 	/**
@@ -42,7 +42,7 @@ public class FormVO extends DataObject {
 	 * @param key
 	 * @param operation
 	 */
-	public FormVO(String key, String operation) {
+	public FormVO(String key, char operation) {
 		super(key);
 		this.operation = operation;
 	}
@@ -65,11 +65,11 @@ public class FormVO extends DataObject {
 		this.condSetBean = condSetBean;
 	}
 
-	public String getOperation() {
+	public char getOperation() {
 		return operation;
 	}
 
-	public void setOperation(String operation) {
+	public void setOperation(char operation) {
 		this.operation = operation;
 	}
 
@@ -173,9 +173,9 @@ public class FormVO extends DataObject {
 	 */
 	public String toSQLString() {
 		String sql = null;
-		if (StringUtils.equals(this.operation, DataObject.OPERATION_INSERT)) {
+		if (this.operation == DataObject.OPERATION_INSERT) {
 			sql = toInsertSQLString();
-		} else if (StringUtils.equals(this.operation, DataObject.OPERATION_UPDATE)) {
+		} else if (this.operation == DataObject.OPERATION_UPDATE) {
 			sql = toUpdateSQLString();
 		}
 		return sql;

@@ -17,7 +17,7 @@ import hq.mydb.utils.MyDBHelper;
  */
 public class RowVO extends DataObject {
 	private static final long serialVersionUID = 4916603218514512459L;
-	private String operation = DataObject.OPERATION_UNDEFINED; // 当前RowVO用于生成SQL时对应的数据库操作类型.
+	private char operation = DataObject.OPERATION_UNDEFINED; // 当前RowVO用于生成SQL时对应的数据库操作类型.
 
 	/**
 	 * 生成一个RowVO实例
@@ -26,21 +26,25 @@ public class RowVO extends DataObject {
 		super();
 	}
 
-	public RowVO(String operation) {
+	public RowVO(char operation) {
 		super();
 		this.operation = operation;
 	}
 
-	public RowVO(String key, String operation) {
+	public RowVO(String key) {
+		super(key);
+	}
+
+	public RowVO(String key, char operation) {
 		super(key);
 		this.operation = operation;
 	}
 
-	public String getOperation() {
+	public char getOperation() {
 		return operation;
 	}
 
-	public void setOperation(String operation) {
+	public void setOperation(char operation) {
 		this.operation = operation;
 	}
 
@@ -145,9 +149,9 @@ public class RowVO extends DataObject {
 	 */
 	public String toSQLString() {
 		String sql = null;
-		if (StringUtils.equals(this.operation, DataObject.OPERATION_INSERT)) {
+		if (this.operation == DataObject.OPERATION_INSERT) {
 			sql = toInsertSQLString();
-		} else if (StringUtils.equals(this.operation, DataObject.OPERATION_UPDATE)) {
+		} else if (this.operation == DataObject.OPERATION_UPDATE) {
 			sql = toUpdateSQLString();
 		}
 		return sql;

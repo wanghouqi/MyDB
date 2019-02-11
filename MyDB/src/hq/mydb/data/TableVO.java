@@ -22,7 +22,7 @@ import hq.mydb.utils.MyDBHelper;
  */
 public class TableVO extends DataObject {
 	private static final long serialVersionUID = 6492071082836861362L;
-	private String operation = DataObject.OPERATION_UNDEFINED; // 当前TableVO用于生成SQL时对应的数据库操作类型.
+	private char operation = DataObject.OPERATION_UNDEFINED; // 当前TableVO用于生成SQL时对应的数据库操作类型.
 	private RowVO rvoHead = null;// head RowVO用于传递给页面时使用.
 
 	/**
@@ -46,16 +46,16 @@ public class TableVO extends DataObject {
 	 * @param key
 	 * @param operation
 	 */
-	public TableVO(String key, String operation) {
+	public TableVO(String key, char operation) {
 		super(key);
 		this.operation = operation;
 	}
 
-	public String getOperation() {
+	public char getOperation() {
 		return operation;
 	}
 
-	public void setOperation(String operation) {
+	public void setOperation(char operation) {
 		this.operation = operation;
 	}
 
@@ -177,9 +177,9 @@ public class TableVO extends DataObject {
 	 */
 	public ArrayList<String> toSQLStrings() {
 		ArrayList<String> sqls = null;
-		if (StringUtils.equals(this.operation, DataObject.OPERATION_INSERT)) {
+		if (this.operation == DataObject.OPERATION_INSERT) {
 			sqls = toInsertSQLStrings();
-		} else if (StringUtils.equals(this.operation, DataObject.OPERATION_UPDATE)) {
+		} else if (this.operation == DataObject.OPERATION_UPDATE) {
 			sqls = toUpdateSQLStrings();
 		}
 		return sqls;
@@ -634,7 +634,7 @@ public class TableVO extends DataObject {
 	 * @param sorts 
 	 */
 	public void sortByColumn(Sort... sorts) {
-		for (int i = sorts.length-1; i >=0 ; i--) {
+		for (int i = sorts.length - 1; i >= 0; i--) {
 			Sort sort = sorts[i];
 			sortTableByCellBeanKey(sort.getColumnName(), sort.getSort(), sort.isNumber());
 		}

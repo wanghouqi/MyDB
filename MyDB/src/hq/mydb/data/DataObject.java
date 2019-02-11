@@ -9,10 +9,10 @@ import org.apache.commons.lang.StringUtils;
 public abstract class DataObject implements Serializable {
 	private static final long serialVersionUID = -7730134303214442839L;
 
-	public static final String OPERATION_UNDEFINED = "undefined"; // 未知操作
-	public static final String OPERATION_UPDATE = "update"; // 更新表数据
-	public static final String OPERATION_INSERT = "insert"; // 插入表数据
-	public static final String OPERATION_DELETE = "delete"; // 删除表数据
+	public static final char OPERATION_UNDEFINED = 'x'; // 未知操作
+	public static final char OPERATION_UPDATE = 'u'; // 更新表数据
+	public static final char OPERATION_INSERT = 'i'; // 插入表数据
+	public static final char OPERATION_DELETE = 'd'; // 删除表数据
 
 	private String key = ""; // 组件的key
 

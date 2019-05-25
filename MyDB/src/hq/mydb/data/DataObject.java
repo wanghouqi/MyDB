@@ -130,10 +130,29 @@ public abstract class DataObject implements Serializable {
 	 * @param childVO
 	 */
 	protected void addChildVO(DataObject childVO) {
-		this.alKeyOfChildVO.add(childVO.getKey());
+		this.addChildVO(this.alChildVO.size(), childVO);
+	}
+
+	/**
+	 * 添加一个子VO
+	 * @param index
+	 * @param childVO
+	 */
+	protected void addChildVO(int index, DataObject childVO) {
+		this.alKeyOfChildVO.add(index, childVO.getKey());
 		this.hmKeyToChildVO.put(childVO.getKey(), childVO);
-		this.alChildVO.add(childVO);
+		this.alChildVO.add(index, childVO);
 		childVO.addParentVO(this);
+	}
+	
+	/**
+	 * 将childVO移动到ArrayList的指定位置.
+	 * @param childVO
+	 * @param index
+	 */
+	protected void changeChildVOIndex(DataObject childVO,int index) {
+		this.removeChildVO(childVO);
+		this.addChildVO(index, childVO);
 	}
 
 	/**

@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.alibaba.fastjson.JSONObject;
+
 public class DataVO implements Serializable {
 	private static final long serialVersionUID = -6886453255211223417L;
 	private ArrayList<String> tableVOKeys = new ArrayList<String>(); // TableVO的key的集合
@@ -158,5 +160,28 @@ public class DataVO implements Serializable {
 		for (int i = 0; i < tableVOKeyArray.length; i++) {
 			this.addTableVO(this.getTableVO((String) tableVOKeyArray[i]));
 		}
+	}
+
+	/**
+	 * 返回DataVO中的TableVO的JSONObject的JSONArray
+	 * @return
+	 */
+	public JSONObject toJSONObject() {
+		JSONObject joDataVO = new JSONObject();
+		JSONObject joFormArrayVO = new JSONObject();
+		JSONObject joTableArrayVO = new JSONObject();
+
+		// 处理Form集合
+		for (FormVO formVO : this.alFormVO) {
+			joFormArrayVO.put(formVO.getKey(), formVO.toJSONObject());
+		}
+
+		// 处理Table集合
+		for (TableVO tableVO : this.alTableVO) {
+			joTableArrayVO.put(tableVO.getKey(), tableVO.toJSONObject());
+		}
+		joDataVO.put("formVOArray", joFormArrayVO);
+		joDataVO.put("tableVOArray", joTableArrayVO);
+		return joDataVO;
 	}
 }

@@ -2,6 +2,8 @@ package hq.mydb.data;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.alibaba.fastjson.JSONObject;
+
 import hq.mydb.db.Column;
 
 /**
@@ -120,5 +122,15 @@ public class CellVO extends DataObject {
 		CellVO CellVO = new CellVO(super.getKey(), value, columnType);
 		return CellVO;
 	}
-
+	
+	/**
+	 * 将CellVO转换为一个JSONObject
+	 * @return JSONObject
+	 * 				|--> CellVO.getKey() : String
+	 */
+	public JSONObject toJSONObject() {
+		JSONObject retJSONObject = new JSONObject();
+		retJSONObject.put(super.getKey(), this.getValue());
+		return retJSONObject;
+	}
 }

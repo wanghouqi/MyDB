@@ -9,6 +9,7 @@ import java.util.HashSet;
 import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import hq.mydb.comparator.StringComparator;
 import hq.mydb.orderby.Sort;
@@ -119,6 +120,25 @@ public class TableVO extends DataObject {
 	 */
 	public void addRowVO(RowVO rowVO) {
 		super.addChildVO(rowVO);
+	}
+
+	/**
+	 * 
+	 * 向当前TableVO中添加一个RowVO
+	 * @param index
+	 * @param rowVO
+	 */
+	public void addRowVO(int index, RowVO rowVO) {
+		super.addChildVO(index, rowVO);
+	}
+
+	/**
+	 * 将RowVO移动到ArrayList的指定位置.
+	 * @param childVO
+	 * @param index
+	 */
+	public void changeRowVOIndex(DataObject childVO, int index) {
+		super.changeChildVOIndex(childVO, index);
 	}
 
 	/**
@@ -602,6 +622,7 @@ public class TableVO extends DataObject {
 	}
 
 	/**
+	 * 用于Layui的数据表格的数据源的JSON格式.
 	 * 返回TableVO中的RowVO的JSONObject的JSONArray
 	 * @return
 	 */
@@ -611,6 +632,25 @@ public class TableVO extends DataObject {
 			arr.add(rvo.toDataJSONObject());
 		}
 		return arr;
+	}
+
+	/**
+	 * 返回TableVO中的RowVO的JSONObject的JSONArray
+	 * @return
+	 */
+	public JSONObject toJSONObject() {
+		JSONObject joTable = new JSONObject();
+		joTable.put("key", this.getKey());
+		joTable.put("operation", this.operation);
+		if (this.rvoHead != null) {
+			joTable.put("headRowVO", this.rvoHead.toJSONObject());
+		}
+		JSONArray jaDataRowVO = new JSONArray();
+		for (RowVO rvo : this.toRowVOs()) {
+			jaDataRowVO.add(rvo.toJSONObject());
+		}
+		joTable.put("dataRowVOArray", jaDataRowVO);
+		return joTable;
 	}
 
 	/**

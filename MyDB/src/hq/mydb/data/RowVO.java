@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import hq.mydb.db.Column;
@@ -281,6 +282,7 @@ public class RowVO extends DataObject {
 	}
 
 	/**
+	 * 用于Layui的数据表格的数据源的JSON格式.
 	 * 返回RowVO中的所有的CellVO对应的Key和Value对应生成的JSONObject
 	 * @return
 	 */
@@ -311,4 +313,18 @@ public class RowVO extends DataObject {
 		}
 		return obj;
 	}
+	
+	public JSONObject toJSONObject() {
+		JSONObject joTable = new JSONObject();
+		joTable.put("key", this.getKey());
+		joTable.put("operation", this.operation);
+		
+		JSONArray jaCellVO = new JSONArray();
+		for (CellVO cvo : this.toCellVOs()) {
+			jaCellVO.add(cvo.toJSONObject());
+		}
+		joTable.put("cellVOArray", jaCellVO);
+		return joTable;
+	}
+	
 }
